@@ -1,6 +1,6 @@
-/home1/public/spaggelos/spark_2_4_5/bin/spark-submit --class MyLbfgs \
-	/home1/public/spaggelos/mylbfgs/target/mylbfgs-1.0.jar `#location of the jar`\
-	/archive/users/spaggelos/logistic_big_data/part-00000 `#input data`\
+spark-submit --class NlpApp \
+	./target/mylbfgs-1.0.jar `#location of the jar`\
+	./src/main/resources/ `#input data`\
 	5  `#number of partitions`\
 	20 `#number of iterations`
 
