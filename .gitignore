@@ -2,3 +2,5 @@
 *.log
 target/*
 src/main/resources/*
+metastore_db/*
+spark-warehouse/*
