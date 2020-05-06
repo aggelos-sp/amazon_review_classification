@@ -4,6 +4,8 @@ import org.apache.spark.SparkContext._
 import org.apache.spark._ 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.sql.SparkSession
+
 
 
 object NlpApp{
