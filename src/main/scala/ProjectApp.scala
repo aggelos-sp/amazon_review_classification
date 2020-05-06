@@ -18,10 +18,14 @@ object NlpApp{
         Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
         val sourcefile = args(0)
         val numOfPartitions = args(1).toInt
-        val conf = new SparkConf().setAppName("NLP APP")
-        val sc = new SparkContext(conf)
-        val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-
+        //val conf = new SparkConf().setAppName("NLP APP")
+        //val sc = new SparkContext(conf)
+        //val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+        val sqlContext = SparkSession
+                    .builder()
+                    .appName("Spark SQL basic example")
+                    .config("spark.some.config.option", "some-value")
+                    .getOrCreate()
         //val df = sqlContext.read.format("csv").option("header", "true").load(sourcefile)
         val df = sqlContext.read.options(Map("inferSchema"->"true","delimiter"->"\t","header"->"true")).csv(sourcefile)
         df.printSchema()
