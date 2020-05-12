@@ -71,13 +71,6 @@ object NlpApp{
         val objectiveHistory = trainingSummary.objectiveHistory
         println("objectiveHistory:")
         objectiveHistory.foreach(loss => println(loss))
-        /*
-        val dataRDD = df.select("star_rating","features").map(row => (row(1), row(2)))
         
-        val data = dataRDD.map(LabeledPoint.parse)
-        val splits = data.randomSplit(Array(0.7, 0.3), seed = 11L)
-        val training = splits(0).map(x => (x.label, MLUtils.appendBias(x.features))).cache()
-        val test = splits(1)
-        */
     }
 }
