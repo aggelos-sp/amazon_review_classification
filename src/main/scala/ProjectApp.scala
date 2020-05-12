@@ -37,6 +37,7 @@ object NlpApp{
                     .appName("Spark SQL basic example")
                     .config("spark.some.config.option", "some-value")
                     .getOrCreate()
+        import spark.implicits._
         //val df = sqlContext.read.format("csv").option("header", "true").load(sourcefile)
         val df = sqlContext.read.options(Map("inferSchema"->"true","delimiter"->"\t","header"->"true")).csv(sourcefile)
         df.printSchema()
