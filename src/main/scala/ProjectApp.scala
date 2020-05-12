@@ -6,6 +6,15 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.feature.{HashingTF, IDF, Tokenizer}
+import org.apache.spark.rdd.RDD 
+import org.apache.spark.sql.Row
+import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.mllib.optimization.{LBFGS, LogisticGradient, SquaredL2Updater}
+import org.apache.spark.mllib.classification.LogisticRegressionModel
+import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
+import org.apache.spark.ml.classification.LogisticRegression
+import org.apache.spark.ml.classification.{BinaryLogisticRegressionSummary, LogisticRegression}
+
 
 
 object NlpApp{
@@ -38,17 +47,37 @@ object NlpApp{
         val tokenizer = new Tokenizer().setInputCol("review_body").setOutputCol("words")
         val wordsData = tokenizer.transform(cleanDF)
 
-        val hashingTF = new HashingTF()
-                            .setInputCol("words").setOutputCol("rawFeatures").setNumFeatures(20)
-
+        val hashingTF = new HashingTF().setInputCol("words").setOutputCol("rawFeatures").setNumFeatures(20)
         val featurizedData = hashingTF.transform(wordsData)
 
         val idf = new IDF().setInputCol("rawFeatures").setOutputCol("features")
         val idfModel = idf.fit(featurizedData)
 
         val rescaledData = idfModel.transform(featurizedData)
-        rescaledData.select("label", "features").show()
+        rescaledData.select("star_rating", "features").show()
         
+        val data = rescaledData.select("star_rating", "features")
+        val list = List("label" , "features")
+        val completeData = data.toDF(list:_*)
+        val splits = completeData.randomSplit(Array(0.7, 0.3), seed = 11L)
+        val trainingData = splits(0);
+        val testData = splits(1);
         
+        val lr = new LogisticRegression().setMaxIter(10).setRegParam(0.3).setElasticNetParam(0.8)
+        val lrModel = lr.fit(trainingData)
+        println(s"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}")
+        
+        val trainingSummary = lrModel.summary
+        val objectiveHistory = trainingSummary.objectiveHistory
+        println("objectiveHistory:")
+        objectiveHistory.foreach(loss => println(loss))
+        /*
+        val dataRDD = df.select("star_rating","features").map(row => (row(1), row(2)))
+        
+        val data = dataRDD.map(LabeledPoint.parse)
+        val splits = data.randomSplit(Array(0.7, 0.3), seed = 11L)
+        val training = splits(0).map(x => (x.label, MLUtils.appendBias(x.features))).cache()
+        val test = splits(1)
+        */
     }
 }
