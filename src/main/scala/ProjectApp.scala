@@ -67,7 +67,7 @@ object NlpApp{
         
         val lr = new LogisticRegression().setMaxIter(10).setRegParam(0.3).setElasticNetParam(0.8)
         val lrModel = lr.fit(trainingData)
-        println(s"Coefficients: ${lrModel.coefficientMatrix} Intercept: ${lrModel.intercept}")
+        println(s"Coefficients: ${lrModel.coefficientMatrix} Intercept: ${lrModel.interceptVector}")
         
         val trainingSummary = lrModel.summary
         val objectiveHistory = trainingSummary.objectiveHistory
