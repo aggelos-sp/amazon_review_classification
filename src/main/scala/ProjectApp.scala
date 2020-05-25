@@ -5,13 +5,9 @@ import org.apache.spark._
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.ml.feature.{HashingTF, IDF, Tokenizer}
+import org.apache.spark.ml.feature.{HashingTF, IDF, Tokenizer, StopWordsRemover}
 import org.apache.spark.rdd.RDD 
 import org.apache.spark.sql.Row
-import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.mllib.optimization.{LBFGS, LogisticGradient, SquaredL2Updater}
-import org.apache.spark.mllib.classification.LogisticRegressionModel
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.classification.{BinaryLogisticRegressionSummary, LogisticRegression}
 import org.apache.spark.ml.Pipeline
@@ -93,6 +89,7 @@ object NlpApp{
         cv.transform(trainingData)
             .select()
         */
+        /*
         println(s"Coefficients: ${cvModel.coefficientMatrix} Intercept: ${cvModel.interceptVector}")
         
         val trainingSummary = cvModel.summary
@@ -133,6 +130,6 @@ object NlpApp{
         val recall = trainingSummary.weightedRecall
         println(s"Accuracy: $accuracy\nFPR: $falsePositiveRate\nTPR: $truePositiveRate\n" +
             s"F-measure: $fMeasure\nPrecision: $precision\nRecall: $recall")
-        
+        */
     }
 }
