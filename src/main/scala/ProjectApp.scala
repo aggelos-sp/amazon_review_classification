@@ -133,6 +133,6 @@ object NlpApp{
         val recall = trainingSummary.weightedRecall
         println(s"Accuracy: $accuracy\nFPR: $falsePositiveRate\nTPR: $truePositiveRate\n" +
             s"F-measure: $fMeasure\nPrecision: $precision\nRecall: $recall")
-        */
+        
     }
 }
