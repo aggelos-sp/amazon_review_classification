@@ -38,6 +38,7 @@ object NlpApp{
         df.printSchema()
         val cleanDF = df.select("review_body","star_rating").withColumnRenamed("star_rating", "label")
         cleanDF.show(5)
+        println(cleanDF.count())
         
         val splits = cleanDF.randomSplit(Array(0.8, 0.2), seed = 11L)
         val trainingData = splits(0);
@@ -63,28 +64,32 @@ object NlpApp{
         //val list = List("label" , "features")
         //val completeData = data.toDF(list:_*)
         
-        val mlr = new LogisticRegression().setMaxIter(10)
+        val mlr = new LogisticRegression().setMaxIter(10).setElasticNetParam(0.8)
         
         val pipeline = new Pipeline()
             .setStages(Array(tokenizer, remover, hashingTF, idf, mlr))
-        val paramGrid = new ParamGridBuilder()
-            .addGrid(hashingTF.numFeatures, Array(100, 10000, 100000))
-            .addGrid(mlr.regParam, Array(0.1, 0.01, 0.001, 1e-10, 1e-5))
-            .build()
+            .fit(trainingData)
         
-        val evaluator = new MulticlassClassificationEvaluator()
-            .setMetricName( "accuracy")
-            .setLabelCol("label")
-            .setPredictionCol("predictions")
 
-        val cv = new CrossValidator()
-            .setEstimator(pipeline)
-            .setEvaluator(evaluator)
-            .setEstimatorParamMaps(paramGrid)
-            .setNumFolds(3)  // Use 3+ in practice
-            .setParallelism(2)
+        // val paramGrid = new ParamGridBuilder()
+        //     .addGrid(hashingTF.numFeatures, Array(10, 100))
+        //     .addGrid(mlr.regParam, Array(0.1, 0.01))
+        //     .build()
         
-        val cvModel = cv.fit(trainingData)
+        // val evaluator = new MulticlassClassificationEvaluator()
+        //     .setMetricName( "accuracy")
+        //     .setLabelCol("label")
+        //     .setPredictionCol("predictions")
+
+        // val cv = new CrossValidator()
+        //     .setEstimator(pipeline)
+        //     .setEvaluator(evaluator)
+        //     .setEstimatorParamMaps(paramGrid)
+        //     .setNumFolds(2)  // Use 3+ in practice
+        //     //.setParallelism(2)
+        
+        // val cvModel = cv.fit(trainingData)
+        //val trainingSummary = cvModel.bestModel.summary
         /*
         cv.transform(trainingData)
             .select()
@@ -92,7 +97,7 @@ object NlpApp{
         /*
         println(s"Coefficients: ${cvModel.coefficientMatrix} Intercept: ${cvModel.interceptVector}")
         
-        val trainingSummary = cvModel.summary
+        val trainingSummary = cvModel.bestModel.summary
         val objectiveHistory = trainingSummary.objectiveHistory
         println("objectiveHistory:")
         objectiveHistory.foreach(loss => println(loss))

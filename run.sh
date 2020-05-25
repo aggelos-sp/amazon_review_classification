@@ -1,4 +1,4 @@
-spark-submit --class NlpApp --driver-memory 6g\
+~/spark_oper/bin/spark-submit --class NlpApp --driver-memory 6g\
 	./target/mylbfgs-1.0.jar `#location of the jar`\
 	./src/main/resources/ `#input data`\
 	16  `#number of partitions`\
