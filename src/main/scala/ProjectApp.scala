@@ -69,7 +69,7 @@ object NlpApp{
             .setStages(Array(tokenizer, remover, hashingTF, idf, mlr))
         val paramGrid = new ParamGridBuilder()
             .addGrid(hashingTF.numFeatures, Array(100, 10000, 100000))
-            .addGrid(lr.regParam, Array(0.1, 0.01, 0.001, 1e-10, 1e-5))
+            .addGrid(mlr.regParam, Array(0.1, 0.01, 0.001, 1e-10, 1e-5))
             .build()
         
         val evaluator = new MulticlassClassificationEvaluator()
