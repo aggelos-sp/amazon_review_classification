@@ -1,7 +1,7 @@
-spark-submit --class NlpApp \
+spark-submit --class NlpApp --driver-memory 6g\
 	./target/mylbfgs-1.0.jar `#location of the jar`\
 	./src/main/resources/ `#input data`\
-	5  `#number of partitions`\
+	16  `#number of partitions`\
 	20 `#number of iterations`
 
 #/home1/public/spaggelos/mysmallData
