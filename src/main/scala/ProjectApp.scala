@@ -38,7 +38,7 @@ object NlpApp{
                 .config("spark.some.config.option", "some-value")
                 .getOrCreate()
         import spark.implicits._
-        val df = spark.read.options(Map("inferSchema"->"true","delimiter"->"\t","header"->"true")).csv("/home/aggelosspiliotis/Documents/hy543/amazon_review_classification/src/main/resources").where("review_body is not null")
+        val df = spark.read.options(Map("inferSchema"->"true","delimiter"->"\t","header"->"true")).csv(sourcefile).where("review_body is not null")
         df.printSchema()
         val cleanDF = df.select("review_body","star_rating").withColumnRenamed("star_rating", "label")
         cleanDF.show(5)
